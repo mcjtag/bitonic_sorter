@@ -3,6 +3,6 @@ Bitonic sorter (Batcher's sorting network) written in Verilog, parameterizable a
 A file 'bitonic_sort.v' is a top file.
 
 ## Specifications:
-* Depth (latency in cycles): log2(CHAN_NUM)*(log2(CHAN_NUM)+1)/2
-* Comparators (count): CHAN_NUM*log2(CHAN_NUM)*(log2(CHAN_NUM)+1)/4
-* Registers (count): CHAN_NUM*log2(CHAN_NUM)*(log2(CHAN_NUM)+1)*DATA_WIDTH/2
+* Depth (latency in cycles): log2(CHAN_NUM) * (log2(CHAN_NUM) + 1) / 2
+* Comparators (count): CHAN_NUM * log2(CHAN_NUM) * (log2(CHAN_NUM) + 1) / 4
+* Registers (count): CHAN_NUM * log2(CHAN_NUM) * (log2(CHAN_NUM) + 1) * DATA_WIDTH / 2
