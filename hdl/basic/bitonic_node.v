@@ -7,12 +7,10 @@
 // Design Name: 
 // Module Name: bitonic_node
 // Project Name: bitonic_sort
-// Target Devices: 7-series
-// Tool Versions: 2018.3
-// Description: 
-// 
-// Dependencies: 
-// 
+// Target Devices:
+// Tool Versions:
+// Description:
+// Dependencies:
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
@@ -54,30 +52,28 @@ localparam COMP_NUM = 2**ORDER;
 
 genvar i;
 
-generate 
-	for (i = 0; i < COMP_NUM; i = i + 1) begin: COMP
-		wire [DATA_WIDTH-1:0]A;
-		wire [DATA_WIDTH-1:0]B;
-		wire [DATA_WIDTH-1:0]H;
-		wire [DATA_WIDTH-1:0]L;
-		
-		assign A = data_in[DATA_WIDTH*(i + 1 + COMP_NUM * 0)-1-:DATA_WIDTH];
-		assign B = data_in[DATA_WIDTH*(i + 1 + COMP_NUM * 1)-1-:DATA_WIDTH];
-		assign data_out[DATA_WIDTH*(i + 1 + COMP_NUM * 0)-1-:DATA_WIDTH] = H;
-		assign data_out[DATA_WIDTH*(i + 1 + COMP_NUM * 1)-1-:DATA_WIDTH] = L;
+generate for (i = 0; i < COMP_NUM; i = i + 1) begin: COMP
+	wire [DATA_WIDTH-1:0]A;
+	wire [DATA_WIDTH-1:0]B;
+	wire [DATA_WIDTH-1:0]H;
+	wire [DATA_WIDTH-1:0]L;
+	
+	assign A = data_in[DATA_WIDTH*(i + 1 + COMP_NUM * 0)-1-:DATA_WIDTH];
+	assign B = data_in[DATA_WIDTH*(i + 1 + COMP_NUM * 1)-1-:DATA_WIDTH];
+	assign data_out[DATA_WIDTH*(i + 1 + COMP_NUM * 0)-1-:DATA_WIDTH] = H;
+	assign data_out[DATA_WIDTH*(i + 1 + COMP_NUM * 1)-1-:DATA_WIDTH] = L;
 
-		comparator #(
-			.DATA_WIDTH(DATA_WIDTH),
-			.POLARITY(POLARITY),
-			.SIGNED(SIGNED)
-		) comp_inst (
-			.CLK(clk),
-			.A(A),
-			.B(B),
-			.H(H),
-			.L(L)
-		);
-	end
-endgenerate
+	bitonic_comp #(
+		.DATA_WIDTH(DATA_WIDTH),
+		.POLARITY(POLARITY),
+		.SIGNED(SIGNED)
+	) comp_inst (
+		.CLK(clk),
+		.A(A),
+		.B(B),
+		.H(H),
+		.L(L)
+	);
+end endgenerate
 
 endmodule
