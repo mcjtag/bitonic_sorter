@@ -35,10 +35,10 @@ Two interfaces available: basic interface and AXI-Stream.
 	* m_axis_tlast  - Output 'Last' transfer signal (optional)
 	
 ### Data Format
-*data*[DATA_WIDTH\*1-1-:DATA_WIDTH] - Channel '0'
-*data*[DATA_WIDTH\*1-1-:DATA_WIDTH] - Channel '1'
-...
-*data*[DATA_WIDTH\*CHAN_NUM-1-:DATA_WIDTH] - Channel 'CHAN_NUM-1'
+	*data*[DATA_WIDTH\*1-1-:DATA_WIDTH] - Channel '0'
+	*data*[DATA_WIDTH\*1-1-:DATA_WIDTH] - Channel '1'
+	...
+	*data*[DATA_WIDTH\*CHAN_NUM-1-:DATA_WIDTH] - Channel 'CHAN_NUM-1'
 
 ## Example
 ![Bitonic Sorter](/img/bitonic.gif)
