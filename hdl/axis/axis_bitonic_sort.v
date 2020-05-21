@@ -38,9 +38,11 @@
 
 module axis_bitonic_sort #(
 	parameter DATA_WIDTH = 16,	// 
-	parameter CHAN_NUM = 32,	// must be power of 2
+	parameter CHAN_NUM = 32,	// 
 	parameter DIR = 0,			// 0 - ascending, 1 - descending
-	parameter SIGNED = 0		// 0 - unsigned, 1 - signed
+	parameter SIGNED = 0,		// 0 - unsigned, 1 - signed
+	parameter IS_TLAST = 1,		// 1 - enable, 0 - disable
+	parameter IS_TREADY = 1		// 1 - enable, 0 - disable
 )
 (
 	input wire aclk,
@@ -55,28 +57,33 @@ module axis_bitonic_sort #(
 	output wire m_axis_tlast
 );
 
-localparam STAGES = $clog2(CHAN_NUM);
-localparam STAGE_DATA_WIDTH = DATA_WIDTH*CHAN_NUM;
+localparam CHAN_ACT = 2**$clog2(CHAN_NUM);
+localparam CHAN_ADD = CHAN_ACT - CHAN_NUM;
+
+localparam STAGES = $clog2(CHAN_ACT);
+localparam STAGE_DATA_WIDTH = DATA_WIDTH*CHAN_ACT;
 
 wire [STAGE_DATA_WIDTH-1:0]axis_stage_tdata[STAGES:0];
+wire [STAGE_DATA_WIDTH-1:0]m_axis_tdata_tmp;
 wire [STAGES:0]axis_stage_tvalid;
 wire [STAGES:0]axis_stage_tlast;
 wire [STAGES:0]axis_stage_tready;
 
-assign axis_stage_tdata[0] = s_axis_tdata;
+assign axis_stage_tdata[0] = {s_axis_tdata, {CHAN_ADD{SIGNED?{1'b1,{(DATA_WIDTH-1){1'b0}}}:{DATA_WIDTH{1'b0}}}}};
 assign axis_stage_tvalid[0] = s_axis_tvalid;
-assign s_axis_tready = axis_stage_tready[0];
-assign axis_stage_tlast[0] = s_axis_tlast;
-assign m_axis_tdata = axis_stage_tdata[STAGES];
+assign s_axis_tready = IS_TREADY ? axis_stage_tready[0] : 1'b1;
+assign axis_stage_tlast[0] = IS_TLAST ? s_axis_tlast : 1'b0;
+assign m_axis_tdata_tmp = axis_stage_tdata[STAGES];
+assign m_axis_tdata = DIR ? m_axis_tdata_tmp[DATA_WIDTH*CHAN_NUM-1:0] : m_axis_tdata_tmp[DATA_WIDTH*CHAN_ACT-1-:DATA_WIDTH*CHAN_NUM];
 assign m_axis_tvalid = axis_stage_tvalid[STAGES];
-assign axis_stage_tready[STAGES] = m_axis_tready;
-assign m_axis_tlast = axis_stage_tlast[STAGES];
+assign axis_stage_tready[STAGES] = IS_TREADY ? m_axis_tready : 1'b1;
+assign m_axis_tlast = IS_TLAST ? axis_stage_tlast[STAGES] : 1'b0;
 
 genvar stage;
 genvar block;
 
 generate for (stage = 0; stage < STAGES; stage = stage + 1) begin: SORT_STAGE
-	localparam BLOCKS = CHAN_NUM / 2**(stage+1);
+	localparam BLOCKS = CHAN_ACT / 2**(stage+1);
 	localparam BLOCK_ORDER = stage;
 		
 	wire [STAGE_DATA_WIDTH-1:0]s_axis_stage_tdata;
