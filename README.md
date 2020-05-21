@@ -12,7 +12,7 @@ Two interfaces available: basic interface and AXI-Stream.
 * Number Formats: Signed Int, Unsigned Int
 ## Parameters:
 * DATA_WIDTH - Data width of channel
-* CHAN_NUM   - Number of channels (must be power of 2)
+* CHAN_NUM   - Number of channels
 * DIR        - Sorted direction (0 - ascending, 1 - descending)
 * SIGNED     - Signed or Unsigned (0 - unsigned, 1 - signed)
 	
