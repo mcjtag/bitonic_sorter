@@ -36,7 +36,8 @@ Two interfaces available: basic interface and AXI-Stream.
 	
 ### Data Format
 * \*data\*[DATA_WIDTH\*1-1-:DATA_WIDTH] - Channel '0'
-* \*data\*[DATA_WIDTH\*1-1-:DATA_WIDTH] - Channel '1'
+* \*data\*[DATA_WIDTH\*2-1-:DATA_WIDTH] - Channel '1'
+* \*data\*[DATA_WIDTH\*3-1-:DATA_WIDTH] - Channel '2'
 * ...
 * \*data\*[DATA_WIDTH\*CHAN_NUM-1-:DATA_WIDTH] - Channel 'CHAN_NUM-1'
 
