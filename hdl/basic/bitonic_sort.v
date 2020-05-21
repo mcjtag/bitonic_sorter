@@ -38,8 +38,8 @@
 
 module bitonic_sort #(
 	parameter DATA_WIDTH = 16,	// 
-	parameter CHAN_NUM = 8,		// must be power of 2
-	parameter DIR = 0,			// 0 - ascending, 1 - descending
+	parameter CHAN_NUM = 8,		// 
+	parameter DIR = 0,		// 0 - ascending, 1 - descending
 	parameter SIGNED = 0		// 0 - unsigned, 1 - signed
 )
 (
@@ -48,19 +48,24 @@ module bitonic_sort #(
 	output wire [DATA_WIDTH*CHAN_NUM-1:0]data_out
 );
 
-localparam STAGES = $clog2(CHAN_NUM);
-localparam STAGE_DATA_WIDTH = DATA_WIDTH*CHAN_NUM;
+localparam CHAN_ACT = 2**$clog2(CHAN_NUM);
+localparam CHAN_ADD = CHAN_ACT - CHAN_NUM;
+
+localparam STAGES = $clog2(CHAN_ACT);
+localparam STAGE_DATA_WIDTH = DATA_WIDTH*CHAN_ACT;
 
 wire [STAGE_DATA_WIDTH-1:0]stage_data[STAGES:0];
+wire [STAGE_DATA_WIDTH-1:0]data_out_tmp;
 
-assign stage_data[0] = data_in;
-assign data_out = stage_data[STAGES];
+assign stage_data[0] = {data_in, {CHAN_ADD{SIGNED?{1'b1,{(DATA_WIDTH-1){1'b0}}}:{DATA_WIDTH{1'b0}}}}};
+assign data_out_tmp = stage_data[STAGES];
+assign data_out = DIR ? data_out_tmp[DATA_WIDTH*CHAN_NUM-1:0] : data_out_tmp[DATA_WIDTH*CHAN_ACT-1-:DATA_WIDTH*CHAN_NUM];
 
 genvar stage;
 genvar block;
 
 generate for (stage = 0; stage < STAGES; stage = stage + 1) begin: SORT_STAGE
-	localparam BLOCKS = CHAN_NUM / 2**(stage+1);
+	localparam BLOCKS = CHAN_ACT / 2**(stage+1);
 	localparam BLOCK_ORDER = stage;
 		
 	wire [STAGE_DATA_WIDTH-1:0]stage_data_in;

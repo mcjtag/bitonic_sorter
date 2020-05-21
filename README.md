@@ -5,12 +5,12 @@ Two interfaces available: basic interface and AXI-Stream.
 'bitonic_sort.v' is a top file with basic interface;
 'axis_bitonic_sort.v' - is a top file with AXI-Stream interface.
 
-## Specifications:
-* Depth (latency): log2(CHAN_NUM)*(log2(CHAN_NUM)+1)/2
-* Comparators (count): CHAN_NUM*log2(CHAN_NUM)*(log2(CHAN_NUM)+1)/4
-* Registers (count): CHAN_NUM*log2(CHAN_NUM)*(log2(CHAN_NUM)+1)*DATA_WIDTH/2
+## Specifications (for basic interface):
+* Depth (latency): log2(CHAN_NUM)\*(log2(CHAN_NUM)+1)/2
+* Comparators (count): CHAN_NUM\*log2(CHAN_NUM)\*(log2(CHAN_NUM)+1)/4
+* Registers (count): CHAN_NUM\*log2(CHAN_NUM)\*(log2(CHAN_NUM)+1)\*DATA_WIDTH/2
 * Number Formats: Signed Int, Unsigned Int
-## Parameters (for basic interface):
+## Parameters:
 * DATA_WIDTH - Data width of channel
 * CHAN_NUM   - Number of channels (must be power of 2)
 * DIR        - Sorted direction (0 - ascending, 1 - descending)
